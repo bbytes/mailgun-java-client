@@ -19,14 +19,19 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 	}
 
 	@Override
-	public MailgunSendResponse sendMail(String from, String subject, String htmlBody, String... to)
-			throws MailgunClientException {
+	public MailgunSendResponse sendHtmlMail(String from, String subject, String htmlBody, String... to) {
 		MailMessage message = MailBuilder.create().from(from).to(to).subject(subject).html(htmlBody).build();
 		return sendMail(message);
 	}
 
 	@Override
-	public MailgunSendResponse sendMail(MailMessage message) throws MailgunClientException {
+	public MailgunSendResponse sendTextMail(String from, String subject, String txtBody, String... to) {
+		MailMessage message = MailBuilder.create().from(from).to(to).subject(subject).text(txtBody).build();
+		return sendMail(message);
+	}
+
+	@Override
+	public MailgunSendResponse sendMail(MailMessage message) {
 		String reativeURL = "/" + domain + "/messages";
 
 		try {

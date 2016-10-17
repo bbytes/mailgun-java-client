@@ -31,17 +31,17 @@ public class MailOperationTest extends MailgunJavaClientApplicationTests {
 	}
 
 	@Test
-	public void testSendSimpleMail() throws MailgunClientException {
+	public void testSendSimpleMail() {
 		MailOperations mailOperations = client.mailOperations(domain);
-		MailgunSendResponse response = mailOperations.sendMail(environment.getProperty("from.email"), "test mail from mailgun client",
-				"Hello message", environment.getProperty("to.email1"));
+		MailgunSendResponse response = mailOperations.sendTextMail(environment.getProperty("from.email"),
+				"test mail from mailgun client", "Hello message", environment.getProperty("to.email"));
 		Assert.assertTrue(response.isOk());
 		System.out.println(response.getMessage());
 
 	}
 
 	@Test
-	public void testSendMailWithAttachments() throws MailgunClientException {
+	public void testSendMailWithAttachments() {
 		MailOperations mailOperations = client.mailOperations("recruizmail.com");
 		File attachment1 = new File("src/test/resources/testfiles/attachment.txt");
 		File attachment2 = new File("src/test/resources/testfiles/sample.jpg");
@@ -50,8 +50,8 @@ public class MailOperationTest extends MailgunJavaClientApplicationTests {
 		Assert.assertTrue(attachment2.exists());
 		Assert.assertTrue(attachment3.exists());
 
-		MailMessage message = MailBuilder.create().from(environment.getProperty("from.email")).to(environment.getProperty("to.email1"))
-				.subject("Attachment Added").html("Check attachments")
+		MailMessage message = MailBuilder.create().from(environment.getProperty("from.email"))
+				.to(environment.getProperty("to.email")).subject("Attachment Added").html("Check attachments")
 				.addAttachments(attachment1, attachment2, attachment3).build();
 
 		MailgunSendResponse response = mailOperations.sendMail(message);
@@ -62,13 +62,13 @@ public class MailOperationTest extends MailgunJavaClientApplicationTests {
 	}
 
 	@Test
-	public void testSendMailWithInline() throws MailgunClientException {
+	public void testSendMailWithInline() {
 		MailOperations mailOperations = client.mailOperations("recruizmail.com");
 		File image = new File("src/test/resources/testfiles/image.png");
 		Assert.assertTrue(image.exists());
-		MailMessage message = MailBuilder.create().from(environment.getProperty("from.email")).to(environment.getProperty("to.email1"))
-				.subject("Inline image mail").html("<html>Inline image here: <img src=\"cid:image.png\"></html>")
-				.addInline(image).build();
+		MailMessage message = MailBuilder.create().from(environment.getProperty("from.email"))
+				.to(environment.getProperty("to.email")).subject("Inline image mail")
+				.html("<html>Inline image here: <img src=\"cid:image.png\"></html>").addInline(image).build();
 
 		MailgunSendResponse response = mailOperations.sendMail(message);
 

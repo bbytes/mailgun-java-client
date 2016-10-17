@@ -13,14 +13,16 @@ import com.bbytes.mailgun.api.StatsOperations;
 import com.bbytes.mailgun.api.SuppressionOperations;
 import com.bbytes.mailgun.api.TagOperations;
 import com.bbytes.mailgun.api.WebhookOperations;
+import com.bbytes.mailgun.api.impl.DomainTemplate;
 import com.bbytes.mailgun.api.impl.MailTemplate;
+import com.bbytes.mailgun.api.impl.RouteTemplate;
 
 public class MailgunClient extends AbstractClient implements MailgunAPI {
 
 	public MailgunClient(String apiKey) {
 		super(apiKey);
 	}
-	
+
 	public static MailgunClient create(String apiKey) {
 		return new MailgunClient(apiKey);
 	}
@@ -33,8 +35,7 @@ public class MailgunClient extends AbstractClient implements MailgunAPI {
 
 	@Override
 	public DomainOperations domainOperations() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DomainTemplate(getRestTemplate());
 	}
 
 	@Override
@@ -51,8 +52,7 @@ public class MailgunClient extends AbstractClient implements MailgunAPI {
 
 	@Override
 	public RouteOperations roueOperations() {
-		// TODO Auto-generated method stub
-		return null;
+		return new RouteTemplate(getRestTemplate());
 	}
 
 	@Override
