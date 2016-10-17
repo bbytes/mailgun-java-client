@@ -26,8 +26,18 @@ public abstract class AbstractTemplate {
 
 	protected final RestOperations restOperations;
 
+	protected String baseURL = MailgunAPI.MAILGUN_API_BASE_URL;
+
 	public AbstractTemplate(RestOperations restOperations) {
 		this.restOperations = restOperations;
+	}
+
+	public String getBaseURL() {
+		return baseURL;
+	}
+
+	public void setBaseURL(String baseURL) {
+		this.baseURL = baseURL;
 	}
 
 	protected <T> T post(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type)
@@ -37,7 +47,7 @@ public abstract class AbstractTemplate {
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(
 				paramMap, headers);
 		try {
-			return restOperations.postForObject(MailgunAPI.MAILGUN_API_BASE_URL + reativeURL, requestEntity, type);
+			return restOperations.postForObject(getBaseURL() + reativeURL, requestEntity, type);
 		} catch (HttpStatusCodeException e) {
 			throw new MailgunClientException(e);
 		}
@@ -50,8 +60,8 @@ public abstract class AbstractTemplate {
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(
 				paramMap, headers);
 		try {
-			ResponseEntity<T> response = restOperations.exchange(MailgunAPI.MAILGUN_API_BASE_URL + reativeURL,
-					HttpMethod.PUT, requestEntity, type);
+			ResponseEntity<T> response = restOperations.exchange(getBaseURL() + reativeURL, HttpMethod.PUT,
+					requestEntity, type);
 			return response.getBody();
 		} catch (HttpStatusCodeException e) {
 			throw new MailgunClientException(e);
@@ -65,7 +75,7 @@ public abstract class AbstractTemplate {
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(
 					paramMap, headers);
-			return restOperations.postForObject(MailgunAPI.MAILGUN_API_BASE_URL + reativeURL, requestEntity, type);
+			return restOperations.postForObject(getBaseURL() + reativeURL, requestEntity, type);
 		} catch (HttpStatusCodeException e) {
 			throw new MailgunClientException(e);
 		}
@@ -74,8 +84,8 @@ public abstract class AbstractTemplate {
 	protected <T> T get(String reativeURL, MultiValueMap<String, String> paramMap, Class<T> type)
 			throws MailgunClientException {
 		try {
-			UriComponents uriComponents = UriComponentsBuilder
-					.fromUriString(MailgunAPI.MAILGUN_API_BASE_URL + reativeURL).queryParams(paramMap).build();
+			UriComponents uriComponents = UriComponentsBuilder.fromUriString(getBaseURL() + reativeURL)
+					.queryParams(paramMap).build();
 			return restOperations.getForObject(uriComponents.toUriString(), type);
 		} catch (HttpStatusCodeException e) {
 			throw new MailgunClientException(e);
@@ -84,7 +94,7 @@ public abstract class AbstractTemplate {
 
 	protected <T> T get(String reativeURL, Class<T> type) throws MailgunClientException {
 		try {
-			return restOperations.getForObject(MailgunAPI.MAILGUN_API_BASE_URL + reativeURL, type);
+			return restOperations.getForObject(getBaseURL() + reativeURL, type);
 		} catch (HttpStatusCodeException ex) {
 			throw new MailgunClientException(ex);
 		}
@@ -93,7 +103,7 @@ public abstract class AbstractTemplate {
 
 	protected void delete(String reativeURL) throws MailgunClientException {
 		try {
-			restOperations.delete(MailgunAPI.MAILGUN_API_BASE_URL + reativeURL);
+			restOperations.delete(getBaseURL() + reativeURL);
 		} catch (HttpStatusCodeException ex) {
 			throw new MailgunClientException(ex);
 		}
@@ -102,7 +112,7 @@ public abstract class AbstractTemplate {
 
 	protected void delete(String reativeURL, MultiValueMap<String, String> paramMap) throws MailgunClientException {
 		try {
-			restOperations.delete(MailgunAPI.MAILGUN_API_BASE_URL + reativeURL, paramMap);
+			restOperations.delete(getBaseURL() + reativeURL, paramMap);
 		} catch (HttpStatusCodeException ex) {
 			throw new MailgunClientException(ex);
 		}

@@ -16,6 +16,7 @@ import com.bbytes.mailgun.api.WebhookOperations;
 import com.bbytes.mailgun.api.impl.DomainTemplate;
 import com.bbytes.mailgun.api.impl.MailTemplate;
 import com.bbytes.mailgun.api.impl.RouteTemplate;
+import com.bbytes.mailgun.api.impl.WebhookTemplate;
 
 public class MailgunClient extends AbstractClient implements MailgunAPI {
 
@@ -62,9 +63,9 @@ public class MailgunClient extends AbstractClient implements MailgunAPI {
 	}
 
 	@Override
-	public WebhookOperations webhookOperations() {
-		// TODO Auto-generated method stub
-		return null;
+	public WebhookOperations webhookOperations(String domain) {
+		Assert.hasLength(domain, "Domain cannot be null or empty for mail operations.");
+		return new WebhookTemplate(domain,getRestTemplate());
 	}
 
 	@Override

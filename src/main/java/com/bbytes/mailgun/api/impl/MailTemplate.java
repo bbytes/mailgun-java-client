@@ -11,11 +11,10 @@ import com.bbytes.mailgun.util.MailBuilder;
 
 public class MailTemplate extends AbstractTemplate implements MailOperations {
 
-	protected String domain;
-
+	
 	public MailTemplate(String domain, RestOperations restOperations) {
 		super(restOperations);
-		this.domain = domain;
+		setBaseURL(getBaseURL() + "/" + domain);
 	}
 
 	@Override
@@ -32,15 +31,14 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 
 	@Override
 	public MailgunSendResponse sendMail(MailMessage message) {
-		String reativeURL = "/" + domain + "/messages";
-
+	
 		try {
 			MultiValueMap<String, Object> messageData = ConvertUtil.convertMessageToMultiMap(message);
 
 			if (message.hasAttachments()) {
-				return postMultipart(reativeURL, messageData, MailgunSendResponse.class);
+				return postMultipart("/messages", messageData, MailgunSendResponse.class);
 			} else {
-				return post(reativeURL, messageData, MailgunSendResponse.class);
+				return post("/messages", messageData, MailgunSendResponse.class);
 			}
 
 		} catch (Exception e) {
