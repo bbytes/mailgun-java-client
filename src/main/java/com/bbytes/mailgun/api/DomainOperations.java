@@ -1,8 +1,8 @@
 package com.bbytes.mailgun.api;
 
 import com.bbytes.mailgun.api.impl.MailgunClientException;
-import com.bbytes.mailgun.model.MailgunDetailDomainResponse;
 import com.bbytes.mailgun.model.MailgunDomainResponse;
+import com.bbytes.mailgun.model.MailgunDomainListResponse;
 
 public interface DomainOperations {
 
@@ -14,7 +14,7 @@ public interface DomainOperations {
 	 *            Number of records to skip. (0 by default)
 	 * @return
 	 */
-	MailgunDomainResponse getAllDomains(Integer limit, Integer skip);
+	MailgunDomainListResponse getAllDomains(Integer limit, Integer skip);
 
 	/**
 	 * Get specific domain
@@ -22,7 +22,7 @@ public interface DomainOperations {
 	 * @param domain
 	 * @return
 	 */
-	MailgunDetailDomainResponse getDomain(String domain) throws MailgunClientException;
+	MailgunDomainResponse getDomain(String domain) throws MailgunClientException;
 
 	/**
 	 * 
@@ -39,7 +39,7 @@ public interface DomainOperations {
 	 *            for sub-domains.
 	 * @return MailgunDomain
 	 */
-	MailgunDetailDomainResponse createDomain(String name, String smtpPassowrd, String spamAction, boolean wildcard);
+	MailgunDomainResponse createDomain(String name, String smtpPassowrd, String spamAction, boolean wildcard);
 
 	void deletDomain(String domain);
 

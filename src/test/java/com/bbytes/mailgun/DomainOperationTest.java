@@ -9,8 +9,8 @@ import org.springframework.util.Assert;
 import com.bbytes.mailgun.api.DomainOperations;
 import com.bbytes.mailgun.api.impl.MailgunClientException;
 import com.bbytes.mailgun.client.MailgunClient;
-import com.bbytes.mailgun.model.MailgunDetailDomainResponse;
 import com.bbytes.mailgun.model.MailgunDomainResponse;
+import com.bbytes.mailgun.model.MailgunDomainListResponse;
 
 public class DomainOperationTest extends MailgunJavaClientApplicationTests {
 
@@ -30,24 +30,24 @@ public class DomainOperationTest extends MailgunJavaClientApplicationTests {
 	@Test
 	public void getAllDomains() {
 		DomainOperations domainOperations = client.domainOperations();
-		MailgunDomainResponse response = domainOperations.getAllDomains(3, 0);
+		MailgunDomainListResponse response = domainOperations.getAllDomains(3, 0);
 		Assert.isTrue(response.getTotalCount() > 0);
 	}
 
 	@Test
 	public void getDomain() {
 		DomainOperations domainOperations = client.domainOperations();
-		MailgunDomainResponse response = domainOperations.getAllDomains(3, 0);
-		MailgunDetailDomainResponse mailgunDetailDomainResponse = domainOperations
+		MailgunDomainListResponse response = domainOperations.getAllDomains(3, 0);
+		MailgunDomainResponse mailgunDomainResponse = domainOperations
 				.getDomain(response.getDomains().get(0).getName());
-		Assert.isTrue(!mailgunDetailDomainResponse.getDomain().getName().isEmpty());
+		Assert.isTrue(!mailgunDomainResponse.getDomain().getName().isEmpty());
 
 	}
 
 	@Test
 	public void createDomain() throws MailgunClientException {
 		DomainOperations domainOperations = client.domainOperations();
-		MailgunDetailDomainResponse response = domainOperations.createDomain("test.sample2.com", "testtest123",
+		MailgunDomainResponse response = domainOperations.createDomain("test.sample2.com", "testtest123",
 				"disabled", true);
 		Assert.isTrue(!response.getDomain().getName().isEmpty());
 	}

@@ -1,7 +1,7 @@
 package com.bbytes.mailgun.api;
 
-import com.bbytes.mailgun.model.MailgunDetailRouteResponse;
 import com.bbytes.mailgun.model.MailgunRouteResponse;
+import com.bbytes.mailgun.model.MailgunRouteListResponse;
 
 public interface RouteOperations {
 
@@ -13,9 +13,9 @@ public interface RouteOperations {
 	 *            Number of records to skip. (0 by default)
 	 * @return
 	 */
-	MailgunRouteResponse getAllRoutes(Integer limit, Integer skip);
+	MailgunRouteListResponse getAllRoutes(Integer limit, Integer skip);
 
-	MailgunDetailRouteResponse getRoute(String routeId);
+	MailgunRouteResponse getRoute(String routeId);
 
 	/**
 	 * priority Integer: smaller number indicates higher priority. Higher
@@ -32,9 +32,9 @@ public interface RouteOperations {
 	 * @param routeId
 	 * @return
 	 */
-	MailgunDetailRouteResponse createRoute(Integer priority, String description, String expression, String... action);
+	MailgunRouteResponse createRoute(Integer priority, String description, String expression, String... action);
 
-	MailgunDetailRouteResponse updateRoute(String routeId, Integer priority, String description, String expression, String action);
+	MailgunRouteResponse updateRoute(String routeId, Integer priority, String description, String expression, String action);
 
 	void deleteRoute(String routeId);
 }

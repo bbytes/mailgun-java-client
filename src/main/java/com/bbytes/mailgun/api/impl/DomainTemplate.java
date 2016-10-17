@@ -5,8 +5,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestOperations;
 
 import com.bbytes.mailgun.api.DomainOperations;
-import com.bbytes.mailgun.model.MailgunDetailDomainResponse;
 import com.bbytes.mailgun.model.MailgunDomainResponse;
+import com.bbytes.mailgun.model.MailgunDomainListResponse;
 
 public class DomainTemplate extends AbstractTemplate implements DomainOperations {
 
@@ -15,27 +15,27 @@ public class DomainTemplate extends AbstractTemplate implements DomainOperations
 	}
 
 	@Override
-	public MailgunDomainResponse getAllDomains(Integer limit, Integer skip) {
+	public MailgunDomainListResponse getAllDomains(Integer limit, Integer skip) {
 		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<String, String>();
 		paramMap.add("limit", limit.toString());
 		paramMap.add("skip", skip.toString());
-		return get("/domains", paramMap, MailgunDomainResponse.class);
+		return get("/domains", paramMap, MailgunDomainListResponse.class);
 	}
 
 	@Override
-	public MailgunDetailDomainResponse getDomain(String domain) throws MailgunClientException {
-		return get("/domains/" + domain, MailgunDetailDomainResponse.class);
+	public MailgunDomainResponse getDomain(String domain) throws MailgunClientException {
+		return get("/domains/" + domain, MailgunDomainResponse.class);
 	}
 
 	@Override
-	public MailgunDetailDomainResponse createDomain(String name, String smtpPassowrd, String spamAction,
+	public MailgunDomainResponse createDomain(String name, String smtpPassowrd, String spamAction,
 			boolean wildcard) {
 		MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
 		paramMap.add("name", name);
 		paramMap.add("smtp_password", smtpPassowrd);
 		paramMap.add("spam_action", spamAction);
 		paramMap.add("wildcard", wildcard ? "true" : "false");
-		return post("/domains", paramMap, MailgunDetailDomainResponse.class);
+		return post("/domains", paramMap, MailgunDomainResponse.class);
 	}
 
 	@Override

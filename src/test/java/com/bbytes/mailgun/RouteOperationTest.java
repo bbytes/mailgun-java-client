@@ -9,8 +9,8 @@ import org.springframework.util.Assert;
 import com.bbytes.mailgun.api.RouteOperations;
 import com.bbytes.mailgun.api.impl.MailgunClientException;
 import com.bbytes.mailgun.client.MailgunClient;
-import com.bbytes.mailgun.model.MailgunDetailRouteResponse;
 import com.bbytes.mailgun.model.MailgunRouteResponse;
+import com.bbytes.mailgun.model.MailgunRouteListResponse;
 
 public class RouteOperationTest extends MailgunJavaClientApplicationTests {
 
@@ -30,35 +30,35 @@ public class RouteOperationTest extends MailgunJavaClientApplicationTests {
 	@Test
 	public void getAllRoutes() {
 		RouteOperations routeOperations = client.roueOperations();
-		MailgunRouteResponse response = routeOperations.getAllRoutes(3, 0);
+		MailgunRouteListResponse response = routeOperations.getAllRoutes(3, 0);
 		Assert.isTrue(response.getTotalCount() > 0);
 	}
 
 	@Test
 	public void getRoute() {
 		RouteOperations routeOperations = client.roueOperations();
-		MailgunRouteResponse response = routeOperations.getAllRoutes(3, 0);
-		MailgunDetailRouteResponse mailgunDetailRouteResponse = routeOperations
+		MailgunRouteListResponse response = routeOperations.getAllRoutes(3, 0);
+		MailgunRouteResponse mailgunRouteResponse = routeOperations
 				.getRoute(response.getRoutes().get(0).getId());
-		Assert.isTrue(!mailgunDetailRouteResponse.getRoute().getId().isEmpty());
+		Assert.isTrue(!mailgunRouteResponse.getRoute().getId().isEmpty());
 
 	}
 
 	@Test
 	public void createRoute() throws MailgunClientException {
 		RouteOperations routeOperations = client.roueOperations();
-		MailgunDetailRouteResponse mailgunDetailRouteResponse = routeOperations.createRoute(0, "simple route",
+		MailgunRouteResponse response = routeOperations.createRoute(0, "simple route",
 				"match_recipient('.*@gmail.com')", "forward('http://myhost.com/messages/')");
-		Assert.isTrue(!mailgunDetailRouteResponse.getRoute().getId().isEmpty());
+		Assert.isTrue(!response.getRoute().getId().isEmpty());
 	}
 
 	@Test
 	public void deleteRoute() throws MailgunClientException {
 		RouteOperations routeOperations = client.roueOperations();
-		MailgunRouteResponse response = routeOperations.getAllRoutes(3, 0);
-		MailgunDetailRouteResponse mailgunDetailRouteResponse = routeOperations
+		MailgunRouteListResponse response = routeOperations.getAllRoutes(3, 0);
+		MailgunRouteResponse mailgunRouteResponse = routeOperations
 				.getRoute(response.getRoutes().get(0).getId());
-		routeOperations.deleteRoute(mailgunDetailRouteResponse.getRoute().getId());
+		routeOperations.deleteRoute(mailgunRouteResponse.getRoute().getId());
 	}
 
 }

@@ -5,8 +5,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestOperations;
 
 import com.bbytes.mailgun.api.RouteOperations;
-import com.bbytes.mailgun.model.MailgunDetailRouteResponse;
 import com.bbytes.mailgun.model.MailgunRouteResponse;
+import com.bbytes.mailgun.model.MailgunRouteListResponse;
 
 public class RouteTemplate extends AbstractTemplate implements RouteOperations {
 
@@ -15,20 +15,20 @@ public class RouteTemplate extends AbstractTemplate implements RouteOperations {
 	}
 
 	@Override
-	public MailgunRouteResponse getAllRoutes(Integer limit, Integer skip) {
+	public MailgunRouteListResponse getAllRoutes(Integer limit, Integer skip) {
 		MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<String, String>();
 		paramMap.add("limit", limit.toString());
 		paramMap.add("skip", skip.toString());
-		return get("/routes", paramMap, MailgunRouteResponse.class);
+		return get("/routes", paramMap, MailgunRouteListResponse.class);
 	}
 
 	@Override
-	public MailgunDetailRouteResponse getRoute(String routeId) {
-		return get("/routes/" + routeId, MailgunDetailRouteResponse.class);
+	public MailgunRouteResponse getRoute(String routeId) {
+		return get("/routes/" + routeId, MailgunRouteResponse.class);
 	}
 
 	@Override
-	public MailgunDetailRouteResponse createRoute(Integer priority, String description, String expression, String... action) {
+	public MailgunRouteResponse createRoute(Integer priority, String description, String expression, String... action) {
 		MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
 		paramMap.add("priority", priority.toString());
 		paramMap.add("description", description);
@@ -37,17 +37,17 @@ public class RouteTemplate extends AbstractTemplate implements RouteOperations {
 			paramMap.add("action", action[i]);
 		}
 		
-		return post("/routes", paramMap, MailgunDetailRouteResponse.class);
+		return post("/routes", paramMap, MailgunRouteResponse.class);
 	}
 
 	@Override
-	public MailgunDetailRouteResponse updateRoute(String routeId, Integer priority, String description, String expression, String action) {
+	public MailgunRouteResponse updateRoute(String routeId, Integer priority, String description, String expression, String action) {
 		MultiValueMap<String, Object> paramMap = new LinkedMultiValueMap<String, Object>();
 		paramMap.add("priority", priority.toString());
 		paramMap.add("description", description);
 		paramMap.add("expression", expression);
 		paramMap.add("action", action);
-		return put("/routes", paramMap, MailgunDetailRouteResponse.class);
+		return put("/routes", paramMap, MailgunRouteResponse.class);
 	}
 
 	@Override

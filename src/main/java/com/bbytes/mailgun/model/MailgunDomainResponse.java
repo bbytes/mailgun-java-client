@@ -7,26 +7,70 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MailgunDomainResponse {
 
-	@JsonProperty("items")
-	private List<MailgunDomain> domains = new ArrayList<MailgunDomain>();
+	@JsonProperty("domain")
+	private MailgunDomain domain;
 
-	@JsonProperty("total_count")
-	private Integer totalCount;
+	@JsonProperty("receiving_dns_records")
+	private List<ReceivingDnsRecord> receivingDnsRecords = new ArrayList<ReceivingDnsRecord>();
 
-	public List<MailgunDomain> getDomains() {
-		return domains;
+	@JsonProperty("sending_dns_records")
+	private List<SendingDnsRecord> sendingDnsRecords = new ArrayList<SendingDnsRecord>();
+
+	/**
+	 * 
+	 * @return The domain
+	 */
+	@JsonProperty("domain")
+	public MailgunDomain getDomain() {
+		return domain;
 	}
 
-	public Integer getTotalCount() {
-		return totalCount;
+	/**
+	 * 
+	 * @param domain
+	 *            The domain
+	 */
+	@JsonProperty("domain")
+	public void setDomain(MailgunDomain domain) {
+		this.domain = domain;
 	}
 
-	public void setDomains(List<MailgunDomain> domains) {
-		this.domains = domains;
+	/**
+	 * 
+	 * @return The receivingDnsRecords
+	 */
+	@JsonProperty("receiving_dns_records")
+	public List<ReceivingDnsRecord> getReceivingDnsRecords() {
+		return receivingDnsRecords;
 	}
 
-	public void setTotalCount(Integer totalCount) {
-		this.totalCount = totalCount;
+	/**
+	 * 
+	 * @param receivingDnsRecords
+	 *            The receiving_dns_records
+	 */
+	@JsonProperty("receiving_dns_records")
+	public void setReceivingDnsRecords(List<ReceivingDnsRecord> receivingDnsRecords) {
+		this.receivingDnsRecords = receivingDnsRecords;
+	}
+
+	/**
+	 * 
+	 * @return The sendingDnsRecords
+	 */
+	@JsonProperty("sending_dns_records")
+	public List<SendingDnsRecord> getSendingDnsRecords() {
+		return sendingDnsRecords;
+	}
+
+	/**
+	 * 
+	 * @param sendingDnsRecords
+	 *            The sending_dns_records
+	 */
+	@JsonProperty("sending_dns_records")
+	public void setSendingDnsRecords(List<SendingDnsRecord> sendingDnsRecords) {
+		this.sendingDnsRecords = sendingDnsRecords;
 	}
 
 }

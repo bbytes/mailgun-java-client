@@ -1,35 +1,51 @@
 package com.bbytes.mailgun.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MailgunRouteResponse {
 
-	@JsonProperty("total_count")
-	private Integer totalCount;
-	
-	@JsonProperty("items")
-	private List<MailgunRoute> routes = new ArrayList<MailgunRoute>();
+	@JsonProperty("message")
+	private String message;
 
-	public Integer getTotalCount() {
-		return totalCount;
+	@JsonProperty("route")
+	private MailgunRoute route;
+
+	/**
+	 * 
+	 * @return The message
+	 */
+	@JsonProperty("message")
+	public String getMessage() {
+		return message;
 	}
 
-	public List<MailgunRoute> getRoutes() {
-		return routes;
+	/**
+	 * 
+	 * @param message
+	 *            The message
+	 */
+	@JsonProperty("message")
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public void setTotalCount(Integer totalCount) {
-		this.totalCount = totalCount;
+	/**
+	 * 
+	 * @return The route
+	 */
+	@JsonProperty("route")
+	public MailgunRoute getRoute() {
+		return route;
 	}
 
-	public void setRoutes(List<MailgunRoute> routes) {
-		this.routes = routes;
+	/**
+	 * 
+	 * @param route
+	 *            The route
+	 */
+	@JsonProperty("route")
+	public void setRoute(MailgunRoute route) {
+		this.route = route;
 	}
-
-	
-	
 
 }
