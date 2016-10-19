@@ -7,7 +7,7 @@ import com.bbytes.mailgun.api.MailOperations;
 import com.bbytes.mailgun.model.MailMessage;
 import com.bbytes.mailgun.model.MailgunSendResponse;
 import com.bbytes.mailgun.util.ConvertUtil;
-import com.bbytes.mailgun.util.MailBuilder;
+import com.bbytes.mailgun.util.MailMessageBuilder;
 
 public class MailTemplate extends AbstractTemplate implements MailOperations {
 
@@ -19,13 +19,13 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 
 	@Override
 	public MailgunSendResponse sendHtmlMail(String from, String subject, String htmlBody, String... to) {
-		MailMessage message = MailBuilder.create().from(from).to(to).subject(subject).html(htmlBody).build();
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).html(htmlBody).build();
 		return sendMail(message);
 	}
 
 	@Override
 	public MailgunSendResponse sendTextMail(String from, String subject, String txtBody, String... to) {
-		MailMessage message = MailBuilder.create().from(from).to(to).subject(subject).text(txtBody).build();
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).text(txtBody).build();
 		return sendMail(message);
 	}
 

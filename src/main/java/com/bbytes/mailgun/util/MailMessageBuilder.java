@@ -16,12 +16,12 @@ import com.bbytes.mailgun.model.MailMessage;
  * case the builder needs a configuration.
  */
 @SuppressWarnings("unused")
-public class MailBuilder {
+public class MailMessageBuilder {
  
 	private MailMessage mailMessage = new MailMessage();
 
-	public static MailBuilder create() {
-		return new MailBuilder();
+	public static MailMessageBuilder create() {
+		return new MailMessageBuilder();
 	}
 	
 	public MailMessage build() {
@@ -44,7 +44,7 @@ public class MailBuilder {
 	 *            the sender address
 	 * @return this builder
 	 */
-	public MailBuilder from(String from) {
+	public MailMessageBuilder from(String from) {
 		mailMessage.setFrom(from);
 		return this;
 	}
@@ -58,7 +58,7 @@ public class MailBuilder {
 	 *            the address of the sender
 	 * @return this builder
 	 */
-	public MailBuilder from(String name, String email) {
+	public MailMessageBuilder from(String name, String email) {
 		mailMessage.setFrom(name + " <" + email + ">");
 		return this;
 	}
@@ -75,12 +75,12 @@ public class MailBuilder {
 	 *            an address
 	 * @return this builder
 	 */
-	public MailBuilder to(String to) {
+	public MailMessageBuilder to(String to) {
 		mailMessage.addTo(to);
 		return this;
 	}
 	
-	public MailBuilder to(String... to) {
+	public MailMessageBuilder to(String... to) {
 		mailMessage.addTo(to);
 		return this;
 	}
@@ -94,7 +94,7 @@ public class MailBuilder {
 	 *            the address of the destination recipient
 	 * @return this builder
 	 */
-	public MailBuilder to(String name, String email) {
+	public MailMessageBuilder to(String name, String email) {
 		mailMessage.addTo(name + "<" + email + ">");
 		return this;
 	}
@@ -111,7 +111,7 @@ public class MailBuilder {
 	 *            an address
 	 * @return this builder
 	 */
-	public MailBuilder cc(String cc) {
+	public MailMessageBuilder cc(String cc) {
 		mailMessage.addCc(cc);
 		return this;
 	}
@@ -125,7 +125,7 @@ public class MailBuilder {
 	 *            the address of the CC recipient
 	 * @return this builder
 	 */
-	public MailBuilder cc(String name, String email) {
+	public MailMessageBuilder cc(String name, String email) {
 		mailMessage.addCc(name + " <" + email + ">");
 		return this;
 	}
@@ -142,7 +142,7 @@ public class MailBuilder {
 	 *            an address
 	 * @return this builder
 	 */
-	public MailBuilder bcc(String bcc) {
+	public MailMessageBuilder bcc(String bcc) {
 		mailMessage.addBcc(bcc);
 		return this;
 	}
@@ -156,7 +156,7 @@ public class MailBuilder {
 	 *            the address of the BCC recipient
 	 * @return this builder
 	 */
-	public MailBuilder bcc(String name, String email) {
+	public MailMessageBuilder bcc(String name, String email) {
 		mailMessage.addBcc(name + " <" + email + ">");
 		return this;
 	}
@@ -170,7 +170,7 @@ public class MailBuilder {
 	 *            an email address
 	 * @return this builder
 	 */
-	public MailBuilder replyTo(String email) {
+	public MailMessageBuilder replyTo(String email) {
 		mailMessage.addParam("h:Reply-To", email);
 		return this;
 	}
@@ -182,7 +182,7 @@ public class MailBuilder {
 	 *            the subject
 	 * @return this builder
 	 */
-	public MailBuilder subject(String subject) {
+	public MailMessageBuilder subject(String subject) {
 		mailMessage.setSubject(subject);
 		return this;
 	}
@@ -194,7 +194,7 @@ public class MailBuilder {
 	 *            the body of the message in plain text
 	 * @return this builder
 	 */
-	public MailBuilder text(String text) {
+	public MailMessageBuilder text(String text) {
 		mailMessage.setText(text);
 		return this;
 	}
@@ -206,7 +206,7 @@ public class MailBuilder {
 	 *            the body of the message in HTML
 	 * @return this builder
 	 */
-	public MailBuilder html(String html) {
+	public MailMessageBuilder html(String html) {
 		mailMessage.setHtml(html);
 		return this;
 	}
@@ -216,7 +216,7 @@ public class MailBuilder {
 	 * @param files
 	 * @return
 	 */
-	public MailBuilder addAttachments(File... files) {
+	public MailMessageBuilder addAttachments(File... files) {
 		mailMessage.addAttachment(files);
 		return this;
 	}
@@ -226,7 +226,7 @@ public class MailBuilder {
 	 * @param files
 	 * @return
 	 */
-	public MailBuilder addAttachment(File file) {
+	public MailMessageBuilder addAttachment(File file) {
 		mailMessage.addAttachment(file);
 		return this;
 	}
@@ -236,7 +236,7 @@ public class MailBuilder {
 	 * @param files
 	 * @return
 	 */
-	public MailBuilder addInlines(File... files) {
+	public MailMessageBuilder addInlines(File... files) {
 		mailMessage.addInline(files);
 		return this;
 	}
@@ -246,7 +246,7 @@ public class MailBuilder {
 	 * @param file
 	 * @return
 	 */
-	public MailBuilder addInline(File file) {
+	public MailMessageBuilder addInline(File file) {
 		mailMessage.addInline(file);
 		return this;
 	}
@@ -256,7 +256,7 @@ public class MailBuilder {
 	 * @param tag
 	 * @return
 	 */
-	public MailBuilder addTag(String... tag) {
+	public MailMessageBuilder addTag(String... tag) {
 		mailMessage.addTag(tag);
 		return this;
 	}
@@ -270,7 +270,7 @@ public class MailBuilder {
 	 *            the value of the parameter
 	 * @return this builder
 	 */
-	public MailBuilder parameter(String name, String value) {
+	public MailMessageBuilder parameter(String name, String value) {
 		mailMessage.addParam(name, value);
 		return this;
 	}

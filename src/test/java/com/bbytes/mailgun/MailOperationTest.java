@@ -13,7 +13,7 @@ import com.bbytes.mailgun.api.impl.MailgunClientException;
 import com.bbytes.mailgun.client.MailgunClient;
 import com.bbytes.mailgun.model.MailMessage;
 import com.bbytes.mailgun.model.MailgunSendResponse;
-import com.bbytes.mailgun.util.MailBuilder;
+import com.bbytes.mailgun.util.MailMessageBuilder;
 
 public class MailOperationTest extends MailgunJavaClientApplicationTests {
 
@@ -50,7 +50,7 @@ public class MailOperationTest extends MailgunJavaClientApplicationTests {
 		Assert.assertTrue(attachment2.exists());
 		Assert.assertTrue(attachment3.exists());
 
-		MailMessage message = MailBuilder.create().from(environment.getProperty("from.email"))
+		MailMessage message = MailMessageBuilder.create().from(environment.getProperty("from.email"))
 				.to(environment.getProperty("to.email")).subject("Attachment Added").html("Check attachments")
 				.addAttachments(attachment1, attachment2, attachment3).build();
 
@@ -66,7 +66,7 @@ public class MailOperationTest extends MailgunJavaClientApplicationTests {
 		MailOperations mailOperations = client.mailOperations("recruizmail.com");
 		File image = new File("src/test/resources/testfiles/image.png");
 		Assert.assertTrue(image.exists());
-		MailMessage message = MailBuilder.create().from(environment.getProperty("from.email"))
+		MailMessage message = MailMessageBuilder.create().from(environment.getProperty("from.email"))
 				.to(environment.getProperty("to.email")).subject("Inline image mail")
 				.html("<html>Inline image here: <img src=\"cid:image.png\"></html>").addInline(image).build();
 
