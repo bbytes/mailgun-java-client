@@ -25,7 +25,7 @@ Usage
 
     MailgunClient client = MailgunClient.create("mailgun.apiKey");
     MailOperations mailOperations = client.mailOperations(domain);
-    MailMessage message = MailBuilder.create()
+    MailMessage message = MailMessageBuilder.create()
                                        .from("from.email")
                                        .to("to.email")
                                        .subject("Attachment Added").html("Check attachments")
