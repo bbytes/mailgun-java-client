@@ -8,6 +8,7 @@ import com.bbytes.mailgun.api.EventOperations;
 import com.bbytes.mailgun.api.MailOperations;
 import com.bbytes.mailgun.api.MailgunAPI;
 import com.bbytes.mailgun.api.MailingListOperations;
+import com.bbytes.mailgun.api.MailingListTemplate;
 import com.bbytes.mailgun.api.RouteOperations;
 import com.bbytes.mailgun.api.StatsOperations;
 import com.bbytes.mailgun.api.SuppressionOperations;
@@ -58,14 +59,13 @@ public class MailgunClient extends AbstractClient implements MailgunAPI {
 
 	@Override
 	public MailingListOperations mailingListOperations() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MailingListTemplate(getRestTemplate());
 	}
 
 	@Override
 	public WebhookOperations webhookOperations(String domain) {
 		Assert.hasLength(domain, "Domain cannot be null or empty for mail operations.");
-		return new WebhookTemplate(domain,getRestTemplate());
+		return new WebhookTemplate(domain, getRestTemplate());
 	}
 
 	@Override
