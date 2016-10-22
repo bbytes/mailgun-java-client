@@ -8,13 +8,13 @@ public class MailingListResponse {
 	private String message;
 	
 	@JsonProperty("list")
-	private MailingList mailingListResponse;
+	private MailgunMailingList mailingListResponse;
 
 	public String getMessage() {
 		return message;
 	}
 
-	public MailingList getMailingListResponse() {
+	public MailgunMailingList getMailingListResponse() {
 		return mailingListResponse;
 	}
 
@@ -22,7 +22,7 @@ public class MailingListResponse {
 		this.message = message;
 	}
 
-	public void setMailingListResponse(MailingList mailingListResponse) {
+	public void setMailingListResponse(MailgunMailingList mailingListResponse) {
 		this.mailingListResponse = mailingListResponse;
 	}
 

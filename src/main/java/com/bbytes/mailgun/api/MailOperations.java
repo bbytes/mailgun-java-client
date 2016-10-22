@@ -10,4 +10,6 @@ public interface MailOperations {
 	MailgunSendResponse sendTextMail(String from, String subject, String txtBody, String... to);
 
 	MailgunSendResponse sendMail(MailMessage message);
+	
+	void sendMailAsync(MailMessage message,ResponseCallback<MailgunSendResponse> callback);
 }

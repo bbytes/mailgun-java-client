@@ -8,12 +8,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class MailingListPageResponse {
 
 	@JsonProperty("items")
-	private List<MailingList> items = new ArrayList<MailingList>();
+	private List<MailgunMailingList> items = new ArrayList<MailgunMailingList>();
 
 	@JsonProperty("paging")
 	private Paging paging;
 
-	public List<MailingList> getItems() {
+	public List<MailgunMailingList> getItems() {
 		return items;
 	}
 
@@ -21,7 +21,7 @@ public class MailingListPageResponse {
 		return paging;
 	}
 
-	public void setItems(List<MailingList> items) {
+	public void setItems(List<MailgunMailingList> items) {
 		this.items = items;
 	}
 

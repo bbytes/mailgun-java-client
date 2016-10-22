@@ -12,6 +12,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.client.AsyncRestOperations;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.util.UriComponents;
@@ -26,10 +28,18 @@ public abstract class AbstractTemplate {
 
 	protected final RestOperations restOperations;
 
+	protected final AsyncRestOperations asyncRestOperations;
+
 	protected String baseURL = MailgunAPI.MAILGUN_API_BASE_URL;
 
 	public AbstractTemplate(RestOperations restOperations) {
 		this.restOperations = restOperations;
+		this.asyncRestOperations = null;
+	}
+
+	public AbstractTemplate(RestOperations restOperations, AsyncRestOperations asyncRestOperations) {
+		this.restOperations = restOperations;
+		this.asyncRestOperations = asyncRestOperations;
 	}
 
 	public String getBaseURL() {
@@ -40,12 +50,10 @@ public abstract class AbstractTemplate {
 		this.baseURL = baseURL;
 	}
 
-	protected <T> T post(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type)
-			throws MailgunClientException {
+	protected <T> T post(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type) throws MailgunClientException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(
-				paramMap, headers);
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap, headers);
 		try {
 			return restOperations.postForObject(getBaseURL() + reativeURL, requestEntity, type);
 		} catch (HttpStatusCodeException e) {
@@ -53,39 +61,54 @@ public abstract class AbstractTemplate {
 		}
 	}
 
-	protected <T> T put(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type)
-			throws MailgunClientException {
+	
+	protected <T> ListenableFuture<ResponseEntity<T>> postAsync(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type) throws MailgunClientException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(
-				paramMap, headers);
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap, headers);
 		try {
-			ResponseEntity<T> response = restOperations.exchange(getBaseURL() + reativeURL, HttpMethod.PUT,
-					requestEntity, type);
+			return asyncRestOperations.postForEntity(getBaseURL() + reativeURL, requestEntity, type);
+		} catch (HttpStatusCodeException e) {
+			throw new MailgunClientException(e);
+		}
+	}
+	protected <T> T put(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type) throws MailgunClientException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap, headers);
+		try {
+			ResponseEntity<T> response = restOperations.exchange(getBaseURL() + reativeURL, HttpMethod.PUT, requestEntity, type);
 			return response.getBody();
 		} catch (HttpStatusCodeException e) {
 			throw new MailgunClientException(e);
 		}
 	}
 
-	protected <T> T postMultipart(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type)
-			throws MailgunClientException {
+	protected <T> T postMultipart(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type) throws MailgunClientException {
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(
-					paramMap, headers);
+			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap, headers);
 			return restOperations.postForObject(getBaseURL() + reativeURL, requestEntity, type);
 		} catch (HttpStatusCodeException e) {
 			throw new MailgunClientException(e);
 		}
 	}
-
-	protected <T> T get(String reativeURL, MultiValueMap<String, String> paramMap, Class<T> type)
-			throws MailgunClientException {
+	
+	protected <T> ListenableFuture<ResponseEntity<T>> postMultipartAsync(String reativeURL, MultiValueMap<String, Object> paramMap, Class<T> type) throws MailgunClientException {
 		try {
-			UriComponents uriComponents = UriComponentsBuilder.fromUriString(getBaseURL() + reativeURL)
-					.queryParams(paramMap).build();
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<MultiValueMap<String, Object>>(paramMap, headers);
+			return asyncRestOperations.postForEntity(getBaseURL() + reativeURL, requestEntity, type);
+		} catch (HttpStatusCodeException e) {
+			throw new MailgunClientException(e);
+		}
+	}
+
+	protected <T> T get(String reativeURL, MultiValueMap<String, String> paramMap, Class<T> type) throws MailgunClientException {
+		try {
+			UriComponents uriComponents = UriComponentsBuilder.fromUriString(getBaseURL() + reativeURL).queryParams(paramMap).build();
 			return restOperations.getForObject(uriComponents.toUriString(), type);
 		} catch (HttpStatusCodeException e) {
 			throw new MailgunClientException(e);
@@ -126,8 +149,8 @@ public abstract class AbstractTemplate {
 		String separator = "";
 		while (matcher.find()) {
 			Object uriVariable = variables[i++];
-			String replacement = Matcher.quoteReplacement(
-					uriVariable != null ? (encode ? encode(uriVariable.toString()) : uriVariable.toString()) : "");
+			String replacement = Matcher
+					.quoteReplacement(uriVariable != null ? (encode ? encode(uriVariable.toString()) : uriVariable.toString()) : "");
 			String key = matcher.group();
 			if (key.charAt(1) == '&' && replacement != null && replacement.length() > 0) {
 				key = key.substring(2, key.length() - 1);
@@ -193,8 +216,8 @@ public abstract class AbstractTemplate {
 	}
 
 	private boolean isSubDelimiter(int c) {
-		return '!' == c || '$' == c || '&' == c || '\'' == c || '(' == c || ')' == c || '*' == c || '+' == c || ',' == c
-				|| ';' == c || '=' == c;
+		return '!' == c || '$' == c || '&' == c || '\'' == c || '(' == c || ')' == c || '*' == c || '+' == c || ',' == c || ';' == c
+				|| '=' == c;
 	}
 
 }

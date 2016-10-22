@@ -2,7 +2,7 @@ package com.bbytes.mailgun.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MailingList {
+public class MailgunMailingList {
 
 	@JsonProperty("created_at")
 	private String createdAt;

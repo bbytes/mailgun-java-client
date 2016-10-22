@@ -1,16 +1,14 @@
 package com.bbytes.mailgun;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.util.Assert;
 
-import com.bbytes.mailgun.api.RouteOperations;
-import com.bbytes.mailgun.api.impl.MailgunClientException;
+import com.bbytes.mailgun.api.MailingListOperations;
 import com.bbytes.mailgun.client.MailgunClient;
-import com.bbytes.mailgun.model.MailgunRouteResponse;
-import com.bbytes.mailgun.model.MailgunRouteListResponse;
+import com.bbytes.mailgun.model.MailingListPageResponse;
 
 public class MailingListOperationTest extends MailgunJavaClientApplicationTests {
 
@@ -28,37 +26,13 @@ public class MailingListOperationTest extends MailgunJavaClientApplicationTests 
 	}
 
 	@Test
-	public void getAllRoutes() {
-		RouteOperations routeOperations = client.roueOperations();
-		MailgunRouteListResponse response = routeOperations.getAllRoutes(3, 0);
-		Assert.isTrue(response.getTotalCount() > 0);
+	public void testGetMailList() {
+		MailingListOperations mailingListOperations = client.mailingListOperations();
+		MailingListPageResponse response = mailingListOperations.getAllList(10);
+		
+		Assert.assertTrue(!response.getItems().isEmpty());
+		System.out.println(response);
 	}
 
-	@Test
-	public void getRoute() {
-		RouteOperations routeOperations = client.roueOperations();
-		MailgunRouteListResponse response = routeOperations.getAllRoutes(3, 0);
-		MailgunRouteResponse mailgunRouteResponse = routeOperations
-				.getRoute(response.getRoutes().get(0).getId());
-		Assert.isTrue(!mailgunRouteResponse.getRoute().getId().isEmpty());
-
-	}
-
-	@Test
-	public void createRoute() throws MailgunClientException {
-		RouteOperations routeOperations = client.roueOperations();
-		MailgunRouteResponse response = routeOperations.createRoute(0, "simple route",
-				"match_recipient('.*@gmail.com')", "forward('http://myhost.com/messages/')");
-		Assert.isTrue(!response.getRoute().getId().isEmpty());
-	}
-
-	@Test
-	public void deleteRoute() throws MailgunClientException {
-		RouteOperations routeOperations = client.roueOperations();
-		MailgunRouteListResponse response = routeOperations.getAllRoutes(3, 0);
-		MailgunRouteResponse mailgunRouteResponse = routeOperations
-				.getRoute(response.getRoutes().get(0).getId());
-		routeOperations.deleteRoute(mailgunRouteResponse.getRoute().getId());
-	}
-
+	
 }

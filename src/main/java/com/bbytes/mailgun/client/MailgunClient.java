@@ -32,7 +32,7 @@ public class MailgunClient extends AbstractClient implements MailgunAPI {
 	@Override
 	public MailOperations mailOperations(String domain) {
 		Assert.hasLength(domain, "Domain cannot be null or empty for mail operations.");
-		return new MailTemplate(domain, getRestTemplate());
+		return new MailTemplate(domain, getRestTemplate(), getAsyncRestTemplate());
 	}
 
 	@Override

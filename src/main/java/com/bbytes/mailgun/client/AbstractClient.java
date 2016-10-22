@@ -10,10 +10,14 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.AsyncClientHttpRequestExecution;
+import org.springframework.http.client.AsyncClientHttpRequestFactory;
+import org.springframework.http.client.AsyncClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -22,6 +26,8 @@ import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.Assert;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
 public abstract class AbstractClient {
@@ -29,6 +35,8 @@ public abstract class AbstractClient {
 	protected static Integer TIMEOUT_IN_SECS = 30;
 
 	protected RestTemplate restTemplate;
+	
+	protected AsyncRestTemplate asyncRestTemplate;
 
 	protected String apiKey;
 
@@ -37,8 +45,10 @@ public abstract class AbstractClient {
 		this.apiKey = apiKey;
 		List<HttpMessageConverter<?>> messageConverters = getMessageConverters();
 		restTemplate = new RestTemplate(clientHttpRequestFactory());
+		asyncRestTemplate = new AsyncRestTemplate(asyncClientHttpRequestFactory());
 		if (messageConverters != null && !messageConverters.isEmpty()) {
 			restTemplate.setMessageConverters(messageConverters);
+			asyncRestTemplate.setMessageConverters(messageConverters);
 		}
 		registerInterceptors(apiKey);
 
@@ -46,6 +56,13 @@ public abstract class AbstractClient {
 
 	private ClientHttpRequestFactory clientHttpRequestFactory() {
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+		factory.setReadTimeout(getReadTimeoutInSecs() * 1000);
+		factory.setConnectTimeout(getConnectionTimeoutInSecs() * 1000);
+		return factory;
+	}
+	
+	private AsyncClientHttpRequestFactory asyncClientHttpRequestFactory() {
+		HttpComponentsAsyncClientHttpRequestFactory factory = new HttpComponentsAsyncClientHttpRequestFactory();
 		factory.setReadTimeout(getReadTimeoutInSecs() * 1000);
 		factory.setConnectTimeout(getConnectionTimeoutInSecs() * 1000);
 		return factory;
@@ -67,6 +84,10 @@ public abstract class AbstractClient {
 		List<ClientHttpRequestInterceptor> interceptors = getRestTemplate().getInterceptors();
 		interceptors.add(new HTTPBasicAuthRequestInterceptor(apiKey));
 		getRestTemplate().setInterceptors(interceptors);
+		
+		List<AsyncClientHttpRequestInterceptor> asyncInterceptors = getAsyncRestTemplate().getInterceptors();
+		asyncInterceptors.add(new HTTPBasicAuthRequestInterceptor(apiKey));
+		getAsyncRestTemplate().setInterceptors(asyncInterceptors);
 	}
 
 	/**
@@ -156,8 +177,12 @@ public abstract class AbstractClient {
 	protected RestTemplate getRestTemplate() {
 		return restTemplate;
 	}
+	
+	protected AsyncRestTemplate getAsyncRestTemplate() {
+		return asyncRestTemplate;
+	}
 
-	private static final class HTTPBasicAuthRequestInterceptor implements ClientHttpRequestInterceptor {
+	private static final class HTTPBasicAuthRequestInterceptor implements ClientHttpRequestInterceptor , AsyncClientHttpRequestInterceptor{
 
 		private final String password;
 		private final String username = "api";
@@ -176,6 +201,18 @@ public abstract class AbstractClient {
 
 			request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + base64Creds);
 			return execution.execute(request, body);
+		}
+
+		@Override
+		public ListenableFuture<ClientHttpResponse> intercept(HttpRequest request, byte[] body, AsyncClientHttpRequestExecution execution)
+				throws IOException {
+			String plainCreds = username + ":" + password;
+			byte[] plainCredsBytes = plainCreds.getBytes();
+			byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
+			String base64Creds = new String(base64CredsBytes);
+
+			request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + base64Creds);
+			return execution.executeAsync(request, body);
 		}
 
 	}
