@@ -1,7 +1,6 @@
 package com.bbytes.mailgun.model;
 
 import java.io.File;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,8 +24,6 @@ public class MailMessage {
 	private String subject;
 	private String text;
 	private String html;
-
-	private ZonedDateTime deliveryTime;
 
 	public MailMessage addTo(String... to) {
 		addListValueInternal(to, toList);
@@ -129,15 +126,6 @@ public class MailMessage {
 
 	public void setTagList(List<String> tagList) {
 		this.tagList.addAll(tagList);
-	}
-
-	public ZonedDateTime getDeliveryTime() {
-		return deliveryTime;
-	}
-
-	public MailMessage setDeliveryTime(ZonedDateTime deliveryTime) {
-		this.deliveryTime = deliveryTime;
-		return this;
 	}
 
 	public List<File> getAttachments() {

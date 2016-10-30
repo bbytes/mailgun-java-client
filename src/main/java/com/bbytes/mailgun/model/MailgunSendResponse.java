@@ -9,9 +9,13 @@ public class MailgunSendResponse extends MailgunResponse {
 
 	@JsonProperty("message")
 	private String message;
-	
+
 	@JsonProperty("id")
 	private String id;
+
+	public boolean isOk() {
+		return getId() != null ? true : false;
+	}
 
 	/**
 	 * 

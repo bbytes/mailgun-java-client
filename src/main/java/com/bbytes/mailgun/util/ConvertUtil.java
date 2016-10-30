@@ -2,7 +2,6 @@ package com.bbytes.mailgun.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,8 +15,6 @@ public class ConvertUtil {
 	private static final String ATTACHMENT = "attachment";
 
 	private static final String INLINE = "inline";
-
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss z");
 
 
 	public static MultiValueMap<String, Object> convertMessageToMultiMap(MailMessage message)
@@ -49,10 +46,6 @@ public class ConvertUtil {
 		for (String tag : message.getTagList()) {
 			messageData.add("o:tag", tag);
 		}
-
-		if (message.getDeliveryTime() != null)
-			messageData.add("o:deliverytime", message.getDeliveryTime().format(FORMATTER));
-
 		
 
 		for (File file : message.getAttachments()) {

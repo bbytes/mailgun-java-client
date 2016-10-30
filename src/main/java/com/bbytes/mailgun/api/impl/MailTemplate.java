@@ -52,7 +52,7 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 	}
 
 	@Override
-	public void sendMailAsync(MailMessage message, ResponseCallback<MailgunSendResponse> callback) {
+	public void sendMailAsync(MailMessage message, final ResponseCallback<MailgunSendResponse> callback) {
 		try {
 			MultiValueMap<String, Object> messageData = ConvertUtil.convertMessageToMultiMap(message);
 

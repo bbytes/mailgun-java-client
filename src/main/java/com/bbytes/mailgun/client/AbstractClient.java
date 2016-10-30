@@ -3,13 +3,11 @@ package com.bbytes.mailgun.client;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
-import org.springframework.http.MediaType;
 import org.springframework.http.client.AsyncClientHttpRequestExecution;
 import org.springframework.http.client.AsyncClientHttpRequestFactory;
 import org.springframework.http.client.AsyncClientHttpRequestInterceptor;
@@ -26,6 +24,7 @@ import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.Assert;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
@@ -170,7 +169,6 @@ public abstract class AbstractClient {
 	 */
 	protected ByteArrayHttpMessageConverter getByteArrayMessageConverter() {
 		ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
-		converter.setSupportedMediaTypes(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_GIF, MediaType.IMAGE_PNG));
 		return converter;
 	}
 
@@ -196,7 +194,7 @@ public abstract class AbstractClient {
 
 			String plainCreds = username + ":" + password;
 			byte[] plainCredsBytes = plainCreds.getBytes();
-			byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
+			byte[] base64CredsBytes = Base64Utils.encode(plainCredsBytes);
 			String base64Creds = new String(base64CredsBytes);
 
 			request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + base64Creds);
@@ -208,7 +206,7 @@ public abstract class AbstractClient {
 				throws IOException {
 			String plainCreds = username + ":" + password;
 			byte[] plainCredsBytes = plainCreds.getBytes();
-			byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
+			byte[] base64CredsBytes = Base64Utils.encode(plainCredsBytes);
 			String base64Creds = new String(base64CredsBytes);
 
 			request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + base64Creds);

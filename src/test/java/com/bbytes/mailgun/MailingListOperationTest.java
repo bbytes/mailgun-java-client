@@ -1,10 +1,10 @@
 package com.bbytes.mailgun;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.util.Assert;
 
 import com.bbytes.mailgun.api.MailingListOperations;
 import com.bbytes.mailgun.client.MailgunClient;
@@ -21,7 +21,7 @@ public class MailingListOperationTest extends MailgunJavaClientApplicationTests 
 
 	@Before
 	public void setup() {
-		client = MailgunClient.create(environment.getProperty("mailgun.apiKey"));
+		client = MailgunClient.create(environment.getProperty("mailgun.api.key"));
 		domain = environment.getProperty("mailgun.domain");
 	}
 
@@ -30,7 +30,7 @@ public class MailingListOperationTest extends MailgunJavaClientApplicationTests 
 		MailingListOperations mailingListOperations = client.mailingListOperations();
 		MailingListPageResponse response = mailingListOperations.getAllList(10);
 		
-		Assert.assertTrue(!response.getItems().isEmpty());
+		Assert.isTrue(!response.getItems().isEmpty());
 		System.out.println(response);
 	}
 

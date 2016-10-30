@@ -24,7 +24,7 @@ public class WebhookOperationTest extends MailgunJavaClientApplicationTests {
 
 	@Before
 	public void setup() {
-		client = MailgunClient.create(environment.getProperty("mailgun.apiKey"));
+		client = MailgunClient.create(environment.getProperty("mailgun.api.key"));
 		domain = environment.getProperty("mailgun.domain");
 	}
 

@@ -1,6 +1,8 @@
 package com.bbytes.mailgun.client;
 
 import org.springframework.util.Assert;
+import org.springframework.web.client.AsyncRestOperations;
+import org.springframework.web.client.RestOperations;
 
 import com.bbytes.mailgun.api.DomainOperations;
 import com.bbytes.mailgun.api.EmailValidationOperations;
@@ -26,6 +28,7 @@ public class MailgunClient extends AbstractClient implements MailgunAPI {
 	}
 
 	public static MailgunClient create(String apiKey) {
+		Assert.hasLength(apiKey, "Mailgun Api key cannot be null or empty.");
 		return new MailgunClient(apiKey);
 	}
 
@@ -84,6 +87,16 @@ public class MailgunClient extends AbstractClient implements MailgunAPI {
 	public TagOperations tagOperations() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public RestOperations restClient() {
+		return getRestTemplate();
+	}
+	
+	@Override
+	public AsyncRestOperations restAsyncClient() {
+		return getAsyncRestTemplate();
 	}
 
 }
