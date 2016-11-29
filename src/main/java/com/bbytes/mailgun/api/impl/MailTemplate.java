@@ -32,6 +32,18 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).text(txtBody).build();
 		return sendMail(message);
 	}
+	
+	@Override
+	public void sendHtmlMailAsync(String from, String[] to, String subject, String htmlBody,ResponseCallback<MailgunSendResponse> callback) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).html(htmlBody).build();
+		sendMailAsync(message, callback);
+	}
+
+	@Override
+	public void sendTextMailAsync(String from, String[] to, String subject, String txtBody,ResponseCallback<MailgunSendResponse> callback) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).text(txtBody).build();
+		sendMailAsync(message, callback);
+	}
 
 	@Override
 	public MailgunSendResponse sendMail(MailMessage message) {
@@ -62,18 +74,20 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 
 				listenableFuture.addCallback(new ListenableFutureCallback<ResponseEntity<MailgunSendResponse>>() {
 					public void onSuccess(ResponseEntity<MailgunSendResponse> result) {
-						callback.onSuccess(result.getBody());
+						if (callback != null)
+							callback.onSuccess(result.getBody());
 					}
 
 					public void onFailure(Throwable ex) {
-						callback.onFailure(ex);
+						if (callback != null)
+							callback.onFailure(ex);
 					}
 				});
 
 			} else {
 				ListenableFuture<ResponseEntity<MailgunSendResponse>> listenableFuture = postAsync("/messages", messageData,
 						MailgunSendResponse.class);
-				
+
 				listenableFuture.addCallback(new ListenableFutureCallback<ResponseEntity<MailgunSendResponse>>() {
 					public void onSuccess(ResponseEntity<MailgunSendResponse> result) {
 						callback.onSuccess(result.getBody());
@@ -89,5 +103,7 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 			throw new MailgunClientException(e);
 		}
 	}
+
+	
 
 }

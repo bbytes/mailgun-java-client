@@ -47,8 +47,11 @@ public class RouteOperationTest extends MailgunJavaClientApplicationTests {
 	@Test
 	public void createRoute() throws MailgunClientException {
 		RouteOperations routeOperations = client.roueOperations();
+		String domain = "recruiz.com";
+		String fromDomain = "'.*@" + domain + "'";
+		String filter = "match_recipient(" + fromDomain + ")";
 		MailgunRouteResponse response = routeOperations.createRoute(0, "simple route",
-				"match_recipient('.*@gmail.com')", "forward('http://myhost.com/messages/')");
+				filter, "forward('http://myhost.com/messages/')");
 		Assert.isTrue(!response.getRoute().getId().isEmpty());
 	}
 
