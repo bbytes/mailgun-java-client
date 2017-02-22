@@ -204,14 +204,16 @@ public abstract class AbstractClient {
 			String base64Creds = Base64Utils.encodeToString(plainCredsBytes).trim();
 
 			request.getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + base64Creds);
-			/*
-			 * commented trace to fix exception : Attempted read from closed stream.;
-			 * nested exception is java.io.IOException: Attempted read from
-			 * closed stream.
-			 */
+			
 
-			// traceRequest(request, body);
+			traceRequest(request, body);
 			ClientHttpResponse response = execution.execute(request, body);
+			/*
+			 * commented trace to fix exception : Attempted read from closed
+			 * stream.; nested exception is java.io.IOException: Attempted read
+			 * from closed stream.
+			 */
+			
 			// traceResponse(response);
 			return response;
 		}
