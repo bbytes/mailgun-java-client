@@ -1,10 +1,7 @@
 package com.bbytes.mailgun.util;
 
 import java.io.File;
-
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
+import java.util.Collection;
 
 import com.bbytes.mailgun.model.MailMessage;
 
@@ -15,7 +12,7 @@ import com.bbytes.mailgun.model.MailMessage;
  * Can be instantiated using the constructor or a static factory method. In any
  * case the builder needs a configuration.
  */
-@SuppressWarnings("unused")
+
 public class MailMessageBuilder {
  
 	private MailMessage mailMessage = new MailMessage();
@@ -38,7 +35,7 @@ public class MailMessageBuilder {
 	 * <p>
 	 * You don't need to specify the sender address in every mail as it is
 	 * usually the same. You can specify a default {@code From} address in the
-	 * {@link Configuration} object.
+	 * Configuration object.
 	 *
 	 * @param from
 	 *            the sender address
@@ -84,6 +81,11 @@ public class MailMessageBuilder {
 		mailMessage.addTo(to);
 		return this;
 	}
+	
+	public MailMessageBuilder to(Collection<String> to) {
+		mailMessage.addTo(to);
+		return this;
+	}
 
 	/**
 	 * Adds a destination recipient's address.
@@ -115,6 +117,16 @@ public class MailMessageBuilder {
 		mailMessage.addCc(cc);
 		return this;
 	}
+	
+	public MailMessageBuilder cc(String... cc) {
+		mailMessage.addCc(cc);
+		return this;
+	}
+	
+	public MailMessageBuilder cc(Collection<String> cc) {
+		mailMessage.addCc(cc);
+		return this;
+	}
 
 	/**
 	 * Adds a CC recipient's address.
@@ -143,6 +155,16 @@ public class MailMessageBuilder {
 	 * @return this builder
 	 */
 	public MailMessageBuilder bcc(String bcc) {
+		mailMessage.addBcc(bcc);
+		return this;
+	}
+	
+	public MailMessageBuilder bcc(String... bcc) {
+		mailMessage.addBcc(bcc);
+		return this;
+	}
+	
+	public MailMessageBuilder bcc(Collection<String> bcc) {
 		mailMessage.addBcc(bcc);
 		return this;
 	}

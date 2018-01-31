@@ -29,13 +29,30 @@ public class MailMessage {
 		addListValueInternal(to, toList);
 		return this;
 	}
+	
+	public MailMessage addTo(Collection<String> to) {
+		addListValueInternal(to, toList);
+		return this;
+	}
 
 	public MailMessage addCc(String... cc) {
 		addListValueInternal(cc, ccList);
 		return this;
 	}
 
+	
+	public MailMessage addCc(Collection<String> cc) {
+		addListValueInternal(cc, ccList);
+		return this;
+	}
+	
+	
 	public MailMessage addBcc(String... bcc) {
+		addListValueInternal(bcc, bccList);
+		return this;
+	}
+	
+	public MailMessage addBcc(Collection<String> bcc) {
 		addListValueInternal(bcc, bccList);
 		return this;
 	}
@@ -159,6 +176,14 @@ public class MailMessage {
 	}
 
 	private <T> void addListValueInternal(T[] provideValues, Set<T> internalList) {
+		if (provideValues != null) {
+			for (T value : provideValues) {
+				internalList.add(value);
+			}
+		}
+	}
+	
+	private <T> void addListValueInternal(Collection<T> provideValues, Set<T> internalList) {
 		if (provideValues != null) {
 			for (T value : provideValues) {
 				internalList.add(value);

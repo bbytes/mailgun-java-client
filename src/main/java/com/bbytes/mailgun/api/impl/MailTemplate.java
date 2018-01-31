@@ -1,5 +1,7 @@
 package com.bbytes.mailgun.api.impl;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -32,16 +34,67 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).text(txtBody).build();
 		return sendMail(message);
 	}
-	
+
 	@Override
-	public void sendHtmlMailAsync(String from, String[] to, String subject, String htmlBody,ResponseCallback<MailgunSendResponse> callback) {
+	public void sendHtmlMailAsync(String from, String[] to, String subject, String htmlBody,
+			ResponseCallback<MailgunSendResponse> callback) {
 		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).html(htmlBody).build();
 		sendMailAsync(message, callback);
 	}
 
 	@Override
-	public void sendTextMailAsync(String from, String[] to, String subject, String txtBody,ResponseCallback<MailgunSendResponse> callback) {
+	public void sendTextMailAsync(String from, String[] to, String subject, String txtBody,
+			ResponseCallback<MailgunSendResponse> callback) {
 		MailMessage message = MailMessageBuilder.create().from(from).to(to).subject(subject).text(txtBody).build();
+		sendMailAsync(message, callback);
+	}
+
+	@Override
+	public MailgunSendResponse sendHtmlMail(String from, String subject, String htmlBody, String[] to, String[] cc, String[] bcc) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).cc(cc).bcc(bcc).subject(subject).html(htmlBody).build();
+		return sendMail(message);
+	}
+
+	@Override
+	public MailgunSendResponse sendHtmlMail(String from, String subject, String htmlBody, List<String> to, List<String> cc,
+			List<String> bcc) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).cc(cc).bcc(bcc).subject(subject).html(htmlBody).build();
+		return sendMail(message);
+	}
+
+	@Override
+	public void sendHtmlMailAsync(String from, String[] to, String[] cc, String[] bcc, String subject, String htmlBody,
+			ResponseCallback<MailgunSendResponse> callback) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).cc(cc).bcc(bcc).subject(subject).html(htmlBody).build();
+		sendMailAsync(message, callback);
+
+	}
+
+	@Override
+	public MailgunSendResponse sendTextMail(String from, String subject, String txtBody, String[] to, String[] cc, String[] bcc) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).cc(cc).bcc(bcc).subject(subject).text(txtBody).build();
+		return sendMail(message);
+	}
+
+	@Override
+	public MailgunSendResponse sendTextMail(String from, String subject, String txtBody, List<String> to, List<String> cc,
+			List<String> bcc) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).cc(cc).bcc(bcc).subject(subject).text(txtBody).build();
+		return sendMail(message);
+	}
+
+	@Override
+	public void sendTextMailAsync(String from, String[] to, String[] cc, String[] bcc, String subject, String txtBody,
+			ResponseCallback<MailgunSendResponse> callback) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).cc(cc).bcc(bcc).subject(subject).text(txtBody).build();
+		sendMailAsync(message, callback);
+
+	}
+
+	@Override
+	public void sendTextMailAsync(String from, String[] to, List<String> cc, List<String> bcc, String subject, String txtBody,
+			ResponseCallback<MailgunSendResponse> callback) {
+		MailMessage message = MailMessageBuilder.create().from(from).to(to).cc(cc).bcc(bcc).subject(subject).text(txtBody).build();
 		sendMailAsync(message, callback);
 	}
 
@@ -103,7 +156,5 @@ public class MailTemplate extends AbstractTemplate implements MailOperations {
 			throw new MailgunClientException(e);
 		}
 	}
-
-	
 
 }
